@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const { PrismaClient } = require("@prisma/client");
+const authRoutes = require("./routes/authRoutes"); // ✅ Correct path
+app.use("/api/auth", authRoutes);
 
 dotenv.config();
 const prisma = new PrismaClient();
