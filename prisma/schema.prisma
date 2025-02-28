@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+  role     Role
+  ngoId    Int?    // Nullable for super admins
+  ngo      NGO?    @relation(fields: [ngoId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model NGO {
+  id       Int     @id @default(autoincrement())
+  name     String
+  description String?
+  location String?
+  users    User[]
+  events   Event[]
+  donations Donation[]
+  createdAt DateTime @default(now())
+}
+
+model Event {
+  id       Int     @id @default(autoincrement())
+  name     String
+  description String?
+  date     DateTime
+  ngoId    Int
+  ngo      NGO @relation(fields: [ngoId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Donation {
+  id       Int     @id @default(autoincrement())
+  amount   Float
+  donor    String
+  ngoId    Int
+  ngo      NGO @relation(fields: [ngoId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  VOLUNTEER
+}
